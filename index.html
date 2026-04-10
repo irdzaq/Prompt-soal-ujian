@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Generator Soal ANBK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        primaryHover: '#2563eb',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar untuk estetika */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        .form-checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 0.25rem;
+            accent-color: #3b82f6;
+        }
+        
+        /* Animasi 5 Gradasi Warna untuk Header */
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        .animate-text-gradient {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899, #ef4444, #eab308, #3b82f6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 4s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkBg dark:text-gray-200 min-h-screen transition-colors duration-300 font-sans">
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-darkCard shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    <h1 class="text-xl font-bold tracking-tight animate-text-gradient">Generator Prompt Ujian ANBK</h1>
+                </div>
+                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none">
+                    <svg id="theme-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Default icon is Moon (for light mode view) -->
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- FORM SECTION (Left Side) -->
+            <div class="lg:col-span-7 space-y-6">
+                <form id="generatorForm" class="space-y-6" onsubmit="event.preventDefault(); generatePrompt();">
+                    
+                    <!-- Informasi Ujian Card -->
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                        <h2 class="text-lg font-semibold border-b pb-3 mb-4 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Informasi Ujian
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Mata Pelajaran <span class="text-red-500">*</span></label>
+                                <input type="text" id="mapel" required placeholder="Contoh: Matematika" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Materi <span class="text-red-500">*</span></label>
+                                <input type="text" id="materi" required placeholder="Contoh: Aljabar" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Jenjang <span class="text-red-500">*</span></label>
+                                <select id="jenjang" required class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                                    <option value="SD" selected>SD</option>
+                                    <option value="SMP">SMP</option>
+                                    <option value="SMA">SMA</option>
+                                    <option value="SMK">SMK</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Kelas <span class="text-red-500">*</span></label>
+                                <input type="text" id="kelas" required placeholder="Contoh: 10 atau X" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Opsi Pilihan Ganda <span class="text-red-500">*</span></label>
+                                <select id="opsi" required class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                                    <option value="4" selected>4 Pilihan (A, B, C, D)</option>
+                                    <option value="5">5 Pilihan (A, B, C, D, E)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Durasi (Menit) <span class="text-red-500">*</span></label>
+                                <select id="durasi" required class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                                    <option value="45">45</option>
+                                    <option value="60" selected>60</option>
+                                    <option value="90">90</option>
+                                    <option value="120">120</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1">Tema UI Aplikasi <span class="text-red-500">*</span></label>
+                                <input type="text" id="tema" required placeholder="Contoh: Biru Modern yang Elegan" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Konfigurasi Soal Card -->
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                        <h2 class="text-lg font-semibold border-b pb-3 mb-4 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Konfigurasi Soal
+                        </h2>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Jumlah Soal <span class="text-red-500">*</span> <span class="text-xs text-gray-500 font-normal">(Otomatis dibagi Reguler/HOTS)</span></label>
+                                <input type="number" id="jumlah" required placeholder="Misal: 20" class="w-full md:w-1/2 px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Tingkat Kesulitan <span class="text-red-500">*</span></label>
+                                <div class="flex flex-col space-y-2 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="kesulitan" value="Mudah [20% Soal HOTS]" class="form-checkbox"> Mudah [20% Soal HOTS]
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="kesulitan" value="Sedang [50% Soal HOTS]" checked class="form-checkbox"> Sedang [50% Soal HOTS]
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="kesulitan" value="Sulit [70% Soal HOTS]" class="form-checkbox"> Sulit [70% Soal HOTS]
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Tipe Soal (Pilih min. 1) <span class="text-red-500">*</span></label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="tipeSoal" value="Pilihan Ganda" checked class="form-checkbox"> Pilihan Ganda
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="tipeSoal" value="Pilihan Ganda Kompleks" checked class="form-checkbox"> Pilihan Ganda Kompleks
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="tipeSoal" value="Isian Singkat" class="form-checkbox"> Isian Singkat
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="tipeSoal" value="Benar-Salah" class="form-checkbox"> Benar-Salah
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Topik/Materi Khusus <span class="text-xs text-gray-500 font-normal">(Opsional)</span></label>
+                                <input type="text" id="topik" placeholder="Contoh: Logaritma Dasar" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Instruksi Tambahan <span class="text-xs text-gray-500 font-normal">(Opsional)</span></label>
+                                <textarea id="instruksi" rows="2" placeholder="Contoh: Sertakan soal cerita, hindari rumus kompleks, fokus pada penerapan" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Password Mode Guru <span class="text-red-500">*</span></label>
+                                <input type="text" id="password" placeholder="Contoh: admin123" class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fitur Ekstra Card -->
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                        <h2 class="text-lg font-semibold border-b pb-3 mb-4 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Fitur Tambahan
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
+                                <input type="checkbox" id="gambar" checked class="form-checkbox"> 
+                                <span class="text-sm font-medium">Dukungan Gambar (Soal)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button type="submit" class="w-full py-3 px-6 bg-primary hover:bg-primaryHover text-white font-bold rounded-xl shadow-md transition transform active:scale-[0.99] flex justify-center items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Generate Prompt Sekarang
+                    </button>
+                </form>
+            </div>
+
+            <!-- OUTPUT SECTION (Right Side - Sticky) -->
+            <div class="lg:col-span-5 h-full">
+                <div class="bg-white dark:bg-darkCard p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 lg:sticky lg:top-24 flex flex-col h-full lg:h-[calc(100vh-8rem)]">
+                    
+                    <div class="flex justify-between items-center border-b pb-3 mb-4 border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Hasil Prompt AI
+                        </h2>
+                    </div>
+
+                    <textarea id="output" readonly class="flex-grow w-full p-4 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition resize-none font-mono text-sm leading-relaxed whitespace-pre-wrap" placeholder="Output prompt yang sudah digenerate akan muncul di sini..."></textarea>
+                    
+                    <div class="grid grid-cols-2 gap-3 mt-4">
+                        <button onclick="copyText()" class="py-2.5 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-medium rounded-lg transition flex justify-center items-center gap-2 border border-gray-200 dark:border-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Copy
+                        </button>
+                        <button onclick="downloadText()" class="py-2.5 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-medium rounded-lg transition flex justify-center items-center gap-2 border border-gray-200 dark:border-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download .txt
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 py-6 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
+        <div class="max-w-7xl mx-auto px-4">
+            &copy; 2026 Prompt Generator Soal ANBK. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Setup initial theme based on system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+            updateThemeIcon(true);
+        }
+
+        // Toggle Theme
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const iconPath = document.querySelector('#theme-icon path');
+            if (isDark) {
+                // Sun Icon for dark mode (click to light)
+                iconPath.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
+            } else {
+                // Moon Icon for light mode (click to dark)
+                iconPath.setAttribute('d', 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z');
+            }
+        }
+
+        // Main Generator Function
+        function generatePrompt() {
+            // Get Checkboxes for "Tipe Soal"
+            const tipeCheckboxes = document.querySelectorAll('input[name="tipeSoal"]:checked');
+            if (tipeCheckboxes.length === 0) {
+                alert('Silakan pilih minimal satu Tipe Soal!');
+                return;
+            }
+            const tipeSoal = Array.from(tipeCheckboxes).map(cb => cb.value).join(', ');
+
+            // Retrieve Values
+            const mapel = document.getElementById('mapel').value.trim();
+            const materi = document.getElementById('materi').value.trim();
+            const jenjang = document.getElementById('jenjang').value;
+            const kelas = document.getElementById('kelas').value.trim();
+            const opsi = document.getElementById('opsi').value;
+            const durasi = document.getElementById('durasi').value;
+            const jumlah = parseInt(document.getElementById('jumlah').value);
+            const tema = document.getElementById('tema').value.trim() || 'Modern';
+
+            // Validasi pembagian soal (50:50)
+            const kesulitan = document.querySelector('input[name="kesulitan"]:checked').value;
+            const topik = document.getElementById('topik').value.trim() || '-';
+            const instruksi = document.getElementById('instruksi').value.trim() || '-';
+            const password = document.getElementById('password').value.trim();
+
+            const gambar = document.getElementById('gambar').checked ? 'Ya' : 'Tidak';
+
+            // Constructing EXACT Template Match
+            const promptResult = `Buat ujian Sekolah seperti ANBK/TKA berbasis HTML untuk: 
+Informasi Ujian
+- Mata Pelajaran: ${mapel}
+- Materi: ${materi}
+- Jenjang: ${jenjang}
+- Kelas: ${kelas}
+- Opsi Pilihan Ganda: ${opsi}
+- Durasi: ${durasi} Menit
+Konfigurasi Soal
+- Jumlah Soal: ${jumlah} (${kesulitan})
+- Tipe soal: ${tipeSoal}
+- Topik/Materi Khusus (Opsional): ${topik}
+- Instruksi Tambahan (Opsional): ${instruksi}
+- Aktifkan Dukungan Gambar dalam Soal: ${gambar}
+
+FITUR UTAMA:
+- Sidebar nomor soal dengan status (belum/sudah dijawab/ragu-ragu)
+- Timer countdown, form nama/kelas awal
+- ANTI-CHEATING SISTEM KETAT (WAJIB): 
+  * Page Visibility API: deteksi pindah tab, minimize, split screen, floating window atau close aplikasi
+  * Overlay peringatan merah penuh layar: "⚠️ PERINGATAN! JANGAN PINDAH TAB!"
+  * Countdown timer 10 detik dengan angka besar dan warna merah
+  * TOMBOL "KEMBALI KE UJIAN" - siswa bisa klik untuk kembali sebelum 10 detik
+  * Jika TIDAK diklik selama 10 detik → OTOMATIS SUBMIT ujian dan tampilkan hasil
+  * Counter pelanggaran maksimal 3 kali, lebih dari itu langsung submit
+  * Blur/focus window detection untuk keamanan ekstra
+  * Block semua shortcut: F12, Ctrl+Shift+I, Ctrl+U, right-click, screenshoot
+- Simpan jawaban otomatis ke localStorage
+- Mode Guru password "${password}" → lihat kunci jawaban, edit soal, tambah gambar, Halaman hasil
+- TOMBOL AKSES CEPAT GURU: Tambahkan tombol "Akses Guru" di halaman utama yang langsung minta password tanpa perlu data ujian, (password beri icon mata untuk melihat password)
+- Halaman hasil: nama, kelas, nilai, pelanggaran, waktu
+- Jawaban tersimpan di canva sheet dengan nama "Ujian ${mapel}"
+- Responsif, tema ${tema}
+
+STRUKTUR SOAL:
+questions = [{
+  content: "Teks soal",
+  image: "URL gambar atau null",
+  options: ${opsi},
+  answer: "A",
+  difficulty: "REGULER/HOTS"
+}]
+
+Buat kode HTML lengkap dengan semua fitur!
+
+`;
+
+            // Set output text and scroll
+            const outputArea = document.getElementById('output');
+            outputArea.value = promptResult;
+            
+            // Animasi kecil sukses
+            const btn = document.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Generating...`;
+            
+            setTimeout(() => {
+                btn.innerHTML = `<svg class="w-5 h-5 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Berhasil Digenerate!`;
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                btn.classList.remove('bg-primary', 'hover:bg-primaryHover');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    btn.classList.add('bg-primary', 'hover:bg-primaryHover');
+                }, 2000);
+            }, 400);
+        }
+
+        // Clipboard Copy Logic
+        function copyText() {
+            const text = document.getElementById('output').value;
+            if (!text) {
+                alert('Tolong generate prompt terlebih dahulu!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Prompt berhasil disalin ke clipboard!');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.getElementById('output');
+                textArea.select();
+                document.execCommand('copy');
+                alert('✅ Prompt berhasil disalin!');
+            });
+        }
+
+        // Download TXT Logic
+        function downloadText() {
+            const text = document.getElementById('output').value;
+            if (!text) {
+                alert('Tolong generate prompt terlebih dahulu!');
+                return;
+            }
+            
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = `Prompt_ANBK_${document.getElementById('mapel').value || 'Soal'}.txt`;
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
